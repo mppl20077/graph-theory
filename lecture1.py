@@ -1,9 +1,8 @@
-from turtle import Turtle
 import networkx as nx
 import matplotlib.pyplot as plt
 from copy import deepcopy
 
-# Exrcise 1:
+# Exercise 1:
 
 def draw_graphs_exercise1():
 
@@ -44,8 +43,8 @@ def validate_exercise2():
     G_complete = nx.complete_graph(20)
     G_empty = nx.empty_graph(20)
 
-    print(f'The min deg is {G_empty.degree()[0]} and the max degree is {G_complete.degree()[0]}');
-    print(f'The min num of edges is {G_empty.number_of_edges()} and the max num of edges is {G_complete.number_of_edges()}');
+    print(f'The min deg is {G_empty.degree()[0]} and the max degree is {G_complete.degree()[0]}')
+    print(f'The min num of edges is {G_empty.number_of_edges()} and the max num of edges is {G_complete.number_of_edges()}')
    
     G = nx.gnm_random_graph(20, 50)
     print(f'If G has {G.number_of_edges()} then the complement of G has {nx.complement(G).number_of_edges()}')
@@ -100,7 +99,7 @@ def draw_2_and_3_regular_graphs_exercise4():
 
 # Exercise 5
 
-def check_sequences_exercise5(log_level='info'):
+def check_sequences_exercise5():
 
     sequences = [
         [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
@@ -112,123 +111,10 @@ def check_sequences_exercise5(log_level='info'):
         [4, 4, 2, 2, 2, 2, 2, 2, 2, 2]
     ]
 
-    if log_level == 'info':
-
-        for seq in sequences:
-            # using havel-hakimi
-            is_graphical = nx.is_graphical(seq, method='hh')
-            print(f'Sequence {seq} is %s graphical' % ('' if is_graphical else 'not'))
-
-    elif log_level == 'verbose':
-        
-        for seq in sequences:
-            print('*' * 20)
-            print(f'Start checking for {seq}')
-            print('*' * 20)
-
-            check_finished = False
-
-            print(f'Start basic graphical tests')
-            # _basic_graphical_tests
-            # Sort and perform some simple tests on the sequence
-            deg_sequence = deepcopy(seq)
-            deg_sequence = nx.utils.make_list_of_ints(deg_sequence)
-            p = len(deg_sequence)
-            num_degs = [0] * p
-            dmax, dmin, dsum, n = 0, p, 0, 0
-            for d in deg_sequence:
-
-                # Reject if degree is negative or larger than the sequence length
-                if d < 0:
-                    print(f'The sequence contains node with d = {d} < 0')
-                    print('The sequence is not graphical')
-                    check_finished = True
-                    break
-                elif d >= p:
-                    print(f'The sequence contains node with d = {d} > {p} which is the length of the sequence')
-                    print('The sequence is not graphical')
-                    check_finished = True
-                    break
-                # Process only the non-zero integers
-                elif d > 0:
-                    dmax, dmin, dsum, n = max(dmax, d), min(dmin, d), dsum + d, n + 1
-                    num_degs[d] += 1
-            
-            if check_finished:
-                continue
-
-            print('The sequence has values:')
-            print(f'dmax = {dmax}, dmin = {dmin}, dsum = {dsum}, n = {n}, num_degs = {num_degs}')
-            # Reject sequence if it has odd sum or is oversaturated
-            if dsum % 2:
-                print(f'The sequence has odd dsum = {dsum}')
-                print('The sequence is not graphical')
-                continue
-            elif dsum > n * (n - 1):
-                print(f'The sequence is oversaturated dsum = {dsum} > n * (n - 1)')
-                print('The sequence is not graphical')
-                continue
-            
-            if n == 0:
-                print(f'The sequence has no non-zero degrees n = {n}')
-                print('The sequence is graphical')
-                continue
-
-            print('Start Havel-Hakimi test')
-            print('Test first the ZZ condition:') 
-            print('If 4 * dmin * n >= (dmax + dmin + 1) * (dmax + dmin + 1) then the sequence is graphical')
-            if 4 * dmin * n >= (dmax + dmin + 1) * (dmax + dmin + 1):
-                print('The sequence passes the ZZ condition')
-                print('The sequence is graphical')
-                continue
-            
-            #  Havel-Hakimi
-            modstubs = [0] * (dmax + 1)
-            # Successively reduce degree sequence by removing the maximum degree
-            while n >= 0:
-                print(f'Remaining number of non-zero degree vertices n = {n}')
-                print(f'Remaining num_degs = {num_degs}')
-
-                if n == 0:
-                    print('The sequence is graphical')
-                    break;
-
-                # Retrieve the maximum degree in the sequence
-                print(f'The max degree is dmax = {dmax}')
-                while num_degs[dmax] == 0:
-                    print(f'There is not a vertex with d = dmax = {dmax}')
-                    dmax -= 1
-                    print(f'continue with dmax = {dmax}')
-                # If there are not enough stubs to connect to, then the sequence is
-                # not graphical
-                if dmax > n - 1:
-                    print(f'The number of non-zero degree vertices is n = {n} and dmax = {dmax}')
-                    print('So, there are not enough vertices to connect the vertex with the max degree')
-                    print('The sequence is not graphical')
-                    break
-
-                # Remove largest stub in list
-                print('Remove vertices with the largest degree and reaarrange the rest edges in lower degrees')
-                num_degs[dmax], n = num_degs[dmax] - 1, n - 1
-                # Reduce the next dmax largest stubs
-                mslen = 0
-                k = dmax
-                for i in range(dmax):
-                    while num_degs[k] == 0:
-                        k -= 1
-                    num_degs[k], n = num_degs[k] - 1, n - 1
-                    if k > 1:
-                        modstubs[mslen] = k - 1
-                        mslen += 1
-                # Add back to the list any non-zero stubs that were removed
-                for i in range(mslen):
-                    stub = modstubs[i]
-                    num_degs[stub], n = num_degs[stub] + 1, n + 1
-                    
-            
-    else:
-        print("The supported log levels are 'info' and 'verbose'")
-
+    for seq in sequences:
+        # using havel-hakimi
+        is_graphical = nx.is_graphical(seq, method='hh')
+        print(f'Sequence {seq} is %s graphical' % ('' if is_graphical else 'not'))
 
 if __name__ == '__main__':
 
@@ -236,4 +122,4 @@ if __name__ == '__main__':
     validate_exercise2()
     complements_of_graphs_exercise3()
     draw_2_and_3_regular_graphs_exercise4()
-    check_sequences_exercise5(log_level='verbose')
+    check_sequences_exercise5()

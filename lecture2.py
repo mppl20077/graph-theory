@@ -24,7 +24,7 @@ def paths_exercise1():
     G_node_labels = {node: f'$v_{node}$' for node in G.nodes()}
     G_node_positions = nx.get_node_attributes(G,'pos')
 
-    fig, axes = plt.subplots(nrows=3,ncols=4, figsize=(80, 60))
+    fig, axes = plt.subplots(nrows=3,ncols=4, figsize=(16, 6))
     ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9, ax10, ax11, ax12 = axes.flatten()
     options = {
         'pos': G_node_positions,
@@ -228,7 +228,7 @@ def check_if_biconnected_find_cut_points_exercise2():
                                 shrinkA=9, shrinkB=9,
                                 patchA=None, patchB=None,
                                 connectionstyle="arc3,rad=0.2",
-                                ),
+                                )
                 )
     
     # We can find all the k_separators and just print one pair as it is asked in 
@@ -313,7 +313,7 @@ def check_if_euler_exercise4():
         'node_size':300
     }
 
-    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(60, 30))
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(10, 6))
     ax1, ax2, ax3, ax4 = axes.flatten()
 
     nx.draw(G1, ax=ax1, **G1_options)
@@ -343,24 +343,22 @@ def check_if_euler_exercise4():
         'node_size':300
     }
 
-    
-
     # draw the whole graph without the edgeS (4,6) and (6,8)
     #  which will be drawn as a custom curved line
     edge_list = list(G2.edges())
-    edge_list.remove((4,6))
     edge_list.remove((6,8))
     nx.draw(G2, edgelist=edge_list,ax=ax2, **G2_options)
     ax2.set_title('$G_2$')
-
-    # Draw the edge between nodes 4 and 6 with a curved line
+    
+    # Draw the edge between nodes 6 and 8 with a curved line
+    # This sucks. TODO try to create a circle perimeter between those
     ax2.annotate("",
-                xy=G2_node_positions[4], xycoords='data',
-                xytext=G2_node_positions[6], textcoords='data',
+                xy=G2_node_positions[6], xycoords='data',
+                xytext=G2_node_positions[8], textcoords='data',
                 arrowprops=dict(arrowstyle="-", color="black",
                                 shrinkA=9, shrinkB=9,
                                 patchA=None, patchB=None,
-                                connectionstyle="arc",
+                                connectionstyle="arc3, rad=0.3",
                                 )
                 )
 
